@@ -34,6 +34,8 @@ class Program
     [STAThread]
     public static void Main(string[] args)
     {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+
         macros = Macros;
         if (args.Length > 0 && int.TryParse(args[0], out int max) && max > 0)
             Program.max = max;
