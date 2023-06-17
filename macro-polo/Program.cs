@@ -53,7 +53,6 @@ class Program
             {
                 Console.Write("> ");
                 input = Console.ReadLine().Trim();
-                Console.WriteLine(input);
                 if (input.Equals("q") || input.Equals("quit")) return;
                 var argsArray = input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 ProcessArgs(argsArray, Keyboard);
