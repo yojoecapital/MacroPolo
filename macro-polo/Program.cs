@@ -8,6 +8,7 @@ using System.IO;
 using System.Xml.Linq;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.Text;
 
 class Program
 {
@@ -34,7 +35,7 @@ class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        Console.OutputEncoding = Encoding.UTF8;
 
         macros = Macros;
         if (args.Length > 0 && int.TryParse(args[0], out int max) && max > 0)
@@ -153,17 +154,20 @@ class Program
         if (!Regex.IsMatch(key, @"^[a-zA-Z]+$")) return false;
         key = key.ToUpper();
         XDocument xml = XDocument.Load(MacrosFilePath);
+        var rowToRemove = xml.Descendants("row").FirstOrDefault(x => (string)x.Attribute("key") == key);
+        if(rowToRemove != null) rowToRemove.Remove();
         XElement newRow = new XElement("row",
                           new XAttribute("key", key),
                           new XAttribute("value", value.Trim()));
         xml.Element("root").Add(newRow);
         xml.Save(MacrosFilePath);
-        macros = Macros;
+        macros = xml.Root.Elements().ToDictionary(x => x.Attribute("key").Value.ToUpper(), x => x.Attribute("value").Value);
         return true;
     }
 
     public static string RemoveMacro(string key)
     {
+        key = key.ToUpper();
         XDocument xml = XDocument.Load(MacrosFilePath);
         var rowToRemove = xml.Descendants("row").FirstOrDefault(x => (string)x.Attribute("key") == key);
         if (rowToRemove != null)
@@ -171,7 +175,7 @@ class Program
             string value = (string)rowToRemove.Attribute("value");
             rowToRemove.Remove();
             xml.Save(MacrosFilePath);
-            macros = Macros;
+            macros = xml.Root.Elements().ToDictionary(x => x.Attribute("key").Value.ToUpper(), x => x.Attribute("value").Value);
             return value;
         }
         else return null;

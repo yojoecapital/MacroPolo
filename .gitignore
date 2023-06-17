@@ -1,2 +1,3 @@
 macro-polo/bin/
 .vs/
+.macro-polo/obj

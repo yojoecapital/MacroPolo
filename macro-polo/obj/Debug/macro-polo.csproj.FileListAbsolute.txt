@@ -1,0 +1,14 @@
+C:\Users\Yousef\source\repos\macro-polo\macro-polo\bin\Debug\macro-polo.exe.config
+C:\Users\Yousef\source\repos\macro-polo\macro-polo\bin\Debug\macro-polo.exe
+C:\Users\Yousef\source\repos\macro-polo\macro-polo\bin\Debug\macro-polo.pdb
+C:\Users\Yousef\source\repos\macro-polo\macro-polo\obj\Debug\macro-polo.csproj.AssemblyReference.cache
+C:\Users\Yousef\source\repos\macro-polo\macro-polo\obj\Debug\macro-polo.csproj.SuggestedBindingRedirects.cache
+C:\Users\Yousef\source\repos\macro-polo\macro-polo\obj\Debug\macro-polo.csproj.CoreCompileInputs.cache
+C:\Users\Yousef\source\repos\macro-polo\macro-polo\obj\Debug\macro-polo.exe
+C:\Users\Yousef\source\repos\macro-polo\macro-polo\obj\Debug\macro-polo.pdb
+C:\Users\Yousef\source\repos\macro-polo\macro-polo\bin\Debug\WindowsInput.dll
+C:\Users\Yousef\source\repos\macro-polo\macro-polo\obj\Debug\macro-polo.csproj.CopyComplete
+C:\Users\Yousef\source\repos\macro-polo\macro-polo\bin\Debug\macro-polo.exe.manifest
+C:\Users\Yousef\source\repos\macro-polo\macro-polo\bin\Debug\macro-polo.application
+C:\Users\Yousef\source\repos\macro-polo\macro-polo\obj\Debug\macro-polo.exe.manifest
+C:\Users\Yousef\source\repos\macro-polo\macro-polo\obj\Debug\macro-polo.application
