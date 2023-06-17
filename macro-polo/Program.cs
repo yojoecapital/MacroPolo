@@ -9,10 +9,11 @@ using System.Xml.Linq;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Text;
+using Newtonsoft.Json;
+using System.Collections;
 
 class Program
 {
-    static Dictionary<string, string> macros;
     static string buffer = string.Empty;
     static int max = 100;
     readonly static List<KeyCode> breaks = new List<KeyCode>() {
@@ -30,12 +31,13 @@ class Program
         KeyCode.End,
     };
 
-    static readonly string macrosFileName = "macros.xml";
+    static readonly string macrosFileName = "macros.json";
 
     [STAThread]
     public static void Main(string[] args)
     {
-        Console.OutputEncoding = Encoding.UTF8;
+        Console.OutputEncoding = Encoding.Unicode;
+        Console.InputEncoding = Encoding.Unicode;
 
         macros = Macros;
         if (args.Length > 0 && int.TryParse(args[0], out int max) && max > 0)
@@ -50,7 +52,8 @@ class Program
             while (true)
             {
                 Console.Write("> ");
-                input = Console.ReadLine();
+                input = Console.ReadLine().Trim();
+                Console.WriteLine(input);
                 if (input.Equals("q") || input.Equals("quit")) return;
                 var argsArray = input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 ProcessArgs(argsArray, Keyboard);
@@ -80,14 +83,14 @@ class Program
             var key = args[1];
             var value = string.Join(" ", args.Skip(2));
             if (AddMacro(key, value))
-                Console.WriteLine("Added " + value + " for " + key.ToLower());
+                Console.WriteLine(key.ToLower() + " \u2192 " + value);
             else Console.WriteLine("Error: could not add key");
         }
         else if (args.Length == 2 && (args[0].Equals("remove") || args[0].Equals("r")))
         {
             var key = args[1];
             var value = RemoveMacro(key);
-            if (value != null) Console.WriteLine("Removed " + value + " for " + key.ToLower());
+            if (value != null) Console.WriteLine(key.ToLower() + " \u2260 " + value);
             else Console.WriteLine("Error: unable to find " + key);
         }
         else if (args.Length == 1 && (args[0].Equals("stop") || args[0].Equals("-")))
@@ -124,8 +127,7 @@ class Program
             var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, macrosFileName);
             if (!File.Exists(filePath))
             {
-                XDocument xml = new XDocument(new XElement("root"));
-                xml.Save(filePath);
+                File.WriteAllText(filePath, "{}");
             }
             return filePath;
         }
@@ -133,51 +135,43 @@ class Program
 
     static Dictionary<string, string> GetDictionary(string filePath)
     {
-        try
-        {
-            return XDocument.Load(filePath).Root.Elements()
-                .ToDictionary(x => x.Attribute("key").Value.ToUpper(), x => x.Attribute("value").Value);
-        }
-        catch
-        {
-            return null;
-        }
+        string json = File.ReadAllText(filePath);
+        return JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
     }
 
+    static void SetDictionary(string filePath, Dictionary<string, string> dictionary)
+    {
+        string json = JsonConvert.SerializeObject(dictionary);
+        File.WriteAllText(filePath, json);
+
+    }
+
+    static Dictionary<string, string> macros;
     static Dictionary<string, string> Macros
     {
-        get { return GetDictionary(MacrosFilePath); }
+        get { 
+            return macros == null ? GetDictionary(MacrosFilePath) : macros;
+        }
     }
 
     static bool AddMacro(string key, string value)
     {
         if (!Regex.IsMatch(key, @"^[a-zA-Z]+$")) return false;
-        key = key.ToUpper();
-        XDocument xml = XDocument.Load(MacrosFilePath);
-        var rowToRemove = xml.Descendants("row").FirstOrDefault(x => (string)x.Attribute("key") == key);
-        if(rowToRemove != null) rowToRemove.Remove();
-        XElement newRow = new XElement("row",
-                          new XAttribute("key", key),
-                          new XAttribute("value", value.Trim()));
-        xml.Element("root").Add(newRow);
-        xml.Save(MacrosFilePath);
-        macros = xml.Root.Elements().ToDictionary(x => x.Attribute("key").Value.ToUpper(), x => x.Attribute("value").Value);
+        Macros[key.ToUpper()] = value;
+        SetDictionary(MacrosFilePath, Macros);
         return true;
     }
 
     public static string RemoveMacro(string key)
     {
         key = key.ToUpper();
-        XDocument xml = XDocument.Load(MacrosFilePath);
-        var rowToRemove = xml.Descendants("row").FirstOrDefault(x => (string)x.Attribute("key") == key);
-        if (rowToRemove != null)
+        if (Macros.ContainsKey(key))
         {
-            string value = (string)rowToRemove.Attribute("value");
-            rowToRemove.Remove();
-            xml.Save(MacrosFilePath);
-            macros = xml.Root.Elements().ToDictionary(x => x.Attribute("key").Value.ToUpper(), x => x.Attribute("value").Value);
+            var value = Macros[key];
+            Macros.Remove(key);
+            SetDictionary(MacrosFilePath, Macros);
             return value;
-        }
+        } 
         else return null;
     }
 

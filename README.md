@@ -4,7 +4,7 @@ MacroPolo is a simple console application built with .NET that allows you to cre
 
 ## Features
 
-- Define custom macros: Create keyboard macros to replace specific keys with predefined values. Note that the keys can only contain alphabetical characters. These macros are saved to a local XML file.
+- Define custom macros: Create keyboard macros to replace specific keys with predefined values. Note that the keys can only contain alphabetical characters. These macros are saved to a local JSON file.
 - Text substitutions: Automate text substitutions for frequently used symbols.
 - System-wide monitoring: Capture keyboard input across all applications, ensuring macros work seamlessly in any context.
 - Macro management: Add, update, and remove macros as needed to adapt to changing requirements.
@@ -21,7 +21,7 @@ The MacroPolo application provides the following commands:
 - `add`: Add a new macro. Syntax: `add <key> <value>`. The `<key>` is the trigger phrase, and `<value>` is the replacement text. The `<key>` must have only  alphabetical characters.
 - `remove`: Remove a macro. Syntax: `remove <key>`.
 - `macros`: List all existing macros.
-- `path`: Copy the path to the macros XML file to the clipboard. 
+- `path`: Copy the path to the macros JSON file to the clipboard. 
 - `stop`: Stop the listener. (MacroPolo listens on startup)
 - `start`: Start the lister.
 - `clear`: Clear the screen.
