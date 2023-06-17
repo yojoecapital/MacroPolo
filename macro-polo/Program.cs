@@ -97,6 +97,11 @@ class Program
             Keyboard.KeyEvent += Keyboard_KeyEvent;
             Console.WriteLine("Listening...");
         }
+        else if (args.Length == 1 && (args[0].Equals("path") || args[0].Equals("p")))
+        {
+            Clipboard.SetText(MacrosFilePath);
+            Console.WriteLine(MacrosFilePath);
+        }
         else if (args.Length > 0)
         {
             Console.WriteLine("Usage:");
