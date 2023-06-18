@@ -104,13 +104,14 @@ class Program
         }
         else if (args.Length == 1 && (args[0].Equals("path") || args[0].Equals("p")))
         {
-            Clipboard.SetText(MacrosFilePath);
+            System.Diagnostics.Process.Start(MacrosFilePath);
             Console.WriteLine(MacrosFilePath);
         }
         else if (args.Length > 0)
         {
             Console.WriteLine("Usage:");
             Console.WriteLine("  macros            - List all macros");
+            Console.WriteLine("  path              - Open the macros JSON file");
             Console.WriteLine("  add [key] [value] - Add a new macro (key can only contain alphabetical characters)");
             Console.WriteLine("  remove [key]      - Remove an existing macro");
             Console.WriteLine("  clear             - Clear console screen");
