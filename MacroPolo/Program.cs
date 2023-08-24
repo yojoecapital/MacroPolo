@@ -45,7 +45,11 @@ namespace MacroPolo
             {
                 Console.Write("> ");
                 input = Console.ReadLine().Trim();
-                if (input.Equals("q") || input.Equals("quit")) return;
+                if (input.Equals("q") || input.Equals("quit"))
+                {
+                    Application.Exit();
+                    return; 
+                }
                 var argsArray = input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 Macro.ProcessArgs(argsArray, polo);
             }
