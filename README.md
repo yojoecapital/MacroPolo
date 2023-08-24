@@ -32,4 +32,4 @@ The MacroPolo application provides the following commands:
 
 1. Clone the repository: `git clone https://github.com/your-username/MacroPolo.git`
 2. Build the application using the .NET CLI: `dotnet build`
-3. Run the application: `dotnet run`
+3. Run the application located in `MacroPolo/bin`

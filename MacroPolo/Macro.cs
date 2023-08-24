@@ -57,6 +57,11 @@ namespace MacroPolo
             }
             else if (args.Length == 1 && (args[0].Equals("open") || args[0].Equals("o")))
             {
+                System.Diagnostics.Process.Start(SettingsFilePath);
+                Console.WriteLine(MacrosFilePath);
+            }
+            else if (args.Length == 2 && (args[0].Equals("open") || args[0].Equals("o")) && (args[1].Equals("macros") || args[1].Equals("m")))
+            {
                 System.Diagnostics.Process.Start(MacrosFilePath);
                 Console.WriteLine(MacrosFilePath);
             }
@@ -64,7 +69,8 @@ namespace MacroPolo
             {
                 Console.WriteLine("Usage:");
                 Console.WriteLine("  macros            - List all macros");
-                Console.WriteLine("  open              - Open the macros JSON file");
+                Console.WriteLine("  open              - Open the settings JSON file");
+                Console.WriteLine("  open macros       - Open the macros JSON file");
                 Console.WriteLine("  add [key] [value] - Add a new macro (key can only contain alphabetical characters)");
                 Console.WriteLine("  remove [key]      - Remove an existing macro");
                 Console.WriteLine("  clear             - Clear console screen");
@@ -77,18 +83,28 @@ namespace MacroPolo
             }
         }
 
-        static readonly string macrosFileName = "macros.json";
+        static readonly string settingsFileName = "settings.json";
+
+        static string SettingsFilePath
+        {
+            get
+            {
+                return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, settingsFileName);
+            }
+        }
 
         static string MacrosFilePath
         {
             get
             {
-                var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, macrosFileName);
-                if (!File.Exists(filePath))
-                {
-                    File.WriteAllText(filePath, "{}");
-                }
-                return filePath;
+                var json = File.ReadAllText(SettingsFilePath);
+                var settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+                var macrosPath = settings["macrosPath"];
+                if (!Path.IsPathRooted(macrosPath))
+                    macrosPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, macrosPath);
+                if (!File.Exists(macrosPath))
+                    File.WriteAllText(macrosPath, "{}");
+                return macrosPath;
             }
         }
 
