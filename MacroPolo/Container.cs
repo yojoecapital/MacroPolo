@@ -17,7 +17,7 @@ namespace MacroPolo
         public Container(int containerCapacity, int bufferCapacity)
         {
             if (!Macro.Settings.useOneBuffer) buffers = new Dictionary<int, Buffer<char>>(containerCapacity);
-            defaultBuffer = new Buffer<char>(containerCapacity);
+            defaultBuffer = new Buffer<char>(bufferCapacity);
             this.containerCapacity = containerCapacity;
             this.bufferCapacity = bufferCapacity;
         }
