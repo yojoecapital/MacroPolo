@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace MacroPolo
 {
@@ -48,8 +49,12 @@ namespace MacroPolo
 
         public int Clear()
         {
-            var count = buffers.Count;
-            buffers.Clear();
+            int count = 1;
+            if (!Macro.Settings.useOneBuffer)
+            {
+                count += buffers.Count;
+                buffers.Clear();
+            }
             defaultBuffer.Clear();
             return count;
         }
