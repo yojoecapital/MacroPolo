@@ -1,3 +1,4 @@
 {
-  "macrosPath": "macros.json"
+  "macrosPath": "macros.json",
+  "useOneBuffer":  true
 }

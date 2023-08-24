@@ -83,8 +83,17 @@ namespace MacroPolo
             }
         }
 
-        static readonly string settingsFileName = "settings.json";
+        static Settings settings;
+        public static Settings Settings
+        {
+            get
+            {
+                if (settings == null) settings = Settings.Create(SettingsFilePath);
+                return settings;
+            }
+        }
 
+        static readonly string settingsFileName = "settings.json";
         static string SettingsFilePath
         {
             get
@@ -97,9 +106,7 @@ namespace MacroPolo
         {
             get
             {
-                var json = File.ReadAllText(SettingsFilePath);
-                var settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
-                var macrosPath = settings["macrosPath"];
+                var macrosPath = Settings.macrosPath;
                 if (!Path.IsPathRooted(macrosPath))
                     macrosPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, macrosPath);
                 if (!File.Exists(macrosPath))

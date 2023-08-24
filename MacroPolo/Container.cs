@@ -11,10 +11,12 @@ namespace MacroPolo
     {
         private readonly Dictionary<int, Buffer<char>> buffers;
         private readonly int containerCapacity, bufferCapacity;
+        private readonly Buffer<char> defaultBuffer;
 
         public Container(int containerCapacity, int bufferCapacity)
         {
-            buffers = new Dictionary<int, Buffer<char>>(containerCapacity);
+            if (!Macro.Settings.useOneBuffer) buffers = new Dictionary<int, Buffer<char>>(containerCapacity);
+            defaultBuffer = new Buffer<char>(containerCapacity);
             this.containerCapacity = containerCapacity;
             this.bufferCapacity = bufferCapacity;
         }
@@ -26,25 +28,29 @@ namespace MacroPolo
         public Buffer<char> Buffer
         {
             get {
-                var window = Window.GetActiveWindowId();
-                if (window != null)
+                if (!Macro.Settings.useOneBuffer)
                 {
-                    if (buffers.ContainsKey(window.Value)) return buffers[window.Value];
-                    else if (buffers.Count < containerCapacity)
+                    var window = Window.GetActiveWindowId();
+                    if (window != null)
                     {
-                        var buffer = new Buffer<char>(bufferCapacity);
-                        buffers[window.Value] = buffer;
-                        return buffer;
+                        if (buffers.ContainsKey(window.Value)) return buffers[window.Value];
+                        else if (buffers.Count < containerCapacity)
+                        {
+                            var buffer = new Buffer<char>(bufferCapacity);
+                            buffers[window.Value] = buffer;
+                            return buffer;
+                        }
                     }
-                } 
-                return null;
+                }
+                return defaultBuffer;
             }
         }
 
         public int Clear()
         {
-            var count = Buffer.Count;
-            Buffer.Clear();
+            var count = buffers.Count;
+            buffers.Clear();
+            defaultBuffer.Clear();
             return count;
         }
     }
