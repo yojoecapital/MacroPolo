@@ -28,7 +28,7 @@ namespace MacroPolo
             }
             else if (args.Length == 1 && args[0].Equals("clean"))
             {
-                Console.Write("Cleaned up " + polo.Clear() + " buffer(s)");
+                Console.WriteLine("Cleaned up " + polo.Clear() + " buffer(s)");
             }
             else if (args.Length >= 3 && (args[0].Equals("add") || args[0].Equals("a")))
             {
