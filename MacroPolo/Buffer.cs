@@ -43,14 +43,6 @@ namespace MacroPolo
 
         public void Add(T value)
         {
-            Console.WriteLine(ToString());
-            Console.WriteLine("head.P " + (head.Prev == null ? " " : head.Prev.Value.ToString()));
-            Console.WriteLine("head " + head.Value);
-            Console.WriteLine("head.N " + (head.Next == null ? " "  : head.Next.Value.ToString()));
-            Console.WriteLine("tail.P " + (tail.Prev == null ? " " : tail.Prev.Value.ToString()));
-            Console.WriteLine("tail " + tail.Value);
-            Console.WriteLine("tail.N " + (tail.Next == null ? " " : tail.Next.Value.ToString()));
-
             Node<T> add;
             if (Count++ < capacity)
                 add = new Node<T> { Value = value };
