@@ -76,8 +76,8 @@ namespace MacroPolo
                 Console.WriteLine("  clean (c)                    - Clean the buffer");
                 Console.WriteLine("  start (+)                    - Start listening for macros");
                 Console.WriteLine("  stop (-)                     - Stop listening for macros");
-                Console.WriteLine("  clear (cls)                  - Clear console screen");
-                Console.WriteLine("  quit (q)                     - Exit program");
+                Console.WriteLine("  clear (cls)                  - Clear the console screen");
+                Console.WriteLine("  quit (q)                     - Exit the program");
                 return;
             }
         }
