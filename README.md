@@ -28,7 +28,7 @@ The MacroPolo application provides the following commands:
 ### Releasing
 
 ```
-dotnet msbuild --property:Configuration=Release && cd MacroPolo/bin/Release && 7z a MacroPolo.zip * && gh release create v1.0.0 ./MacroPolo.zip -t --target main "v1.0.0" -F ./RELEASE.md && cd ../../..
+dotnet msbuild --property:Configuration=Release && cd MacroPolo/bin/Release && 7z a MacroPolo.zip * && gh release create v1.0.0 ./MacroPolo.zip -t "v1.0.0" --target main -F ./RELEASE.md && cd ../../..
 ```
 
 ## Contact
