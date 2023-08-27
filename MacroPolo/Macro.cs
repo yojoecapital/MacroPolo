@@ -38,7 +38,7 @@ namespace MacroPolo
                     Console.WriteLine(key + " \u2192 " + value);
                 else Console.WriteLine("Error: could not add key");
             }
-            else if (args.Length == 2 && (args[0].Equals("remove") || args[0].Equals("r")))
+            else if (args.Length == 2 && (args[0].Equals("remove") || args[0].Equals("rm") || args[0].Equals("r")))
             {
                 var key = args[1];
                 var value = RemoveMacro(key);
@@ -68,17 +68,16 @@ namespace MacroPolo
             else if (args.Length > 0)
             {
                 Console.WriteLine("Usage:");
-                Console.WriteLine("  macros            - List all macros");
-                Console.WriteLine("  open              - Open the settings JSON file");
-                Console.WriteLine("  open macros       - Open the macros JSON file");
-                Console.WriteLine("  add [key] [value] - Add a new macro (key can only contain alphabetical characters)");
-                Console.WriteLine("  remove [key]      - Remove an existing macro");
-                Console.WriteLine("  clear             - Clear console screen");
-                Console.WriteLine("  clean             - Clean the buffer");
-                Console.WriteLine("  start / +         - Start listening for macros");
-                Console.WriteLine("  stop / -          - Stop listening for macros");
-                Console.WriteLine("  clear             - Clear console screen");
-                Console.WriteLine("  quit              - Exit program");
+                Console.WriteLine("  macros (m)                   - List all macros");
+                Console.WriteLine("  open (o)                     - Open the settings JSON file");
+                Console.WriteLine("  open macros                  - Open the macros JSON file");
+                Console.WriteLine("  add (a) [key] [value]        - Add a new macro (key can only contain alphabetical characters)");
+                Console.WriteLine("  remove (rm) [key]            - Remove an existing macro");
+                Console.WriteLine("  clean (c)                    - Clean the buffer");
+                Console.WriteLine("  start (+)                    - Start listening for macros");
+                Console.WriteLine("  stop (-)                     - Stop listening for macros");
+                Console.WriteLine("  clear (cls)                  - Clear console screen");
+                Console.WriteLine("  quit (q)                     - Exit program");
                 return;
             }
         }
