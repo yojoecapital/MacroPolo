@@ -11,21 +11,25 @@ namespace MacroPolo
     {
         public static void ProcessArgs(string[] args, Polo polo)
         {
-            if (args.Length == 1 && (args[0].Equals("macros") || args[0].Equals("m")))
+            if (args.Length >= 1 && (args[0].Equals("macros") || args[0].Equals("m")))
             {
                 var macros = Macros;
                 if (macros == null) Console.WriteLine("Error: unable to parse mappings");
                 else
                 {
                     if (macros.Count == 0) Console.WriteLine("<empty>");
-                    foreach (var key in macros.Keys)
-                        Console.WriteLine(key + " \u2192 " + macros[key]);
+                    else if (args.Length == 1) Search.Run(macros);
+                    else
+                    {
+                        var search = string.Join(" ", args.Skip(1));
+                        Search.Run(macros, search);
+                    }
                 }
             }
             else if (args.Length == 1 && args[0].Equals("buffers"))
             {
                 foreach (var names in polo.GetBufferNames())
-                    Console.WriteLine(names);
+                    Console.WriteLine(" \u2022 " + names);
             }
             else if (args.Length == 1 && args[0].Equals("blacklist-current"))
             {
@@ -42,7 +46,7 @@ namespace MacroPolo
             {
                 if (Settings.blacklist.Count == 0) Console.WriteLine("<empty>");
                 foreach (var process in Settings.blacklist)
-                    Console.WriteLine(process);
+                    Console.WriteLine(" \u2022 " + process);
             }
             else if (args.Length == 1 && (args[0].Equals("reload") || args[0].Equals("r")))
             {
@@ -99,7 +103,7 @@ namespace MacroPolo
             else if (args.Length > 0)
             {
                 Console.WriteLine("Usage:");
-                Console.WriteLine("  macros (m)                   - List all macros");
+                Console.WriteLine("  macros (m) [text]            - List all macros sorted by their similarity to [text]");
                 Console.WriteLine("  open (o)                     - Open the settings JSON file");
                 Console.WriteLine("  open macros                  - Open the macros JSON file");
                 Console.WriteLine("  reload (r)                   - Reload the settings JSON file");

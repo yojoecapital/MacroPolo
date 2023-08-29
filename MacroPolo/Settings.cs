@@ -8,6 +8,7 @@ namespace MacroPolo
     {
         public string macrosPath;
         public bool useOneBuffer;
+        public int macrosPerPage;
         public List<string> blacklist;
 
         public static Settings Create(string path)

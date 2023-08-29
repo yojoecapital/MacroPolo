@@ -1,5 +1,6 @@
 {
   "macrosPath": "macros.json",
   "useOneBuffer": true,
+  "macrosPerPage": 10,
   "blacklist": []
 }

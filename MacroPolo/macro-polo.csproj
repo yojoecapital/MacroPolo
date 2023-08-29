@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Macro.cs" />
     <Compile Include="Polo.cs" />
+    <Compile Include="Search.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Window.cs" />
     <Compile Include="Buffer.cs" />
