@@ -6,7 +6,7 @@
   - To do this you must set `useOneBuffer` to `false` in `settings.json`.
   - Add the name of processes you wish for MacroPolo to ignore in the `blacklist` JSON list.
   - You can also use the command `blacklist-current (bc)` to blacklist the current running process such as the terminal running MacroPolo.
-
+- List all the blacklisted processes using the `blacklist (b)` command.
 - Reload the settings JSON using `reload (r)` command.
 
 

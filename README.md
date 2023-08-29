@@ -10,6 +10,9 @@ The MacroPolo application provides the following commands:
 - `macros` or `m`: List all macros
 - `open` `o`: Open the settings JSON file
 - `open macros`: Open the macros JSON file
+- `reload` or `r`: Reload the settings JSON file
+- `blacklist-current` or `bc`: Blacklist the current process's name
+- `blacklist` or `b`: List all blacklisted processes
 - `add [key] [value]` or `a [key] [value]`: Add a new macro (keys can only contain alphabetical characters)
 - `remove [key]` or `rm [key]`: Remove an existing macro
 - `clean` or `c`: Clean the buffer

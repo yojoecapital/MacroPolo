@@ -33,6 +33,12 @@ namespace MacroPolo
                     Settings.SaveSettings(SettingsFilePath, settings);
                 }
             }
+            else if (args.Length == 1 && (args[0].Equals("blacklist") || args[0].Equals("b")))
+            {
+                if (Settings.blacklist.Count == 0) Console.WriteLine("<empty>");
+                foreach (var process in Settings.blacklist)
+                    Console.WriteLine(process);
+            }
             else if (args.Length == 1 && (args[0].Equals("reload") || args[0].Equals("r")))
             {
                 var awake = Polo.awake;
@@ -89,10 +95,11 @@ namespace MacroPolo
             {
                 Console.WriteLine("Usage:");
                 Console.WriteLine("  macros (m)                   - List all macros");
-                Console.WriteLine("  blacklist-current (bc)       - blacklist the current process's name");
                 Console.WriteLine("  open (o)                     - Open the settings JSON file");
                 Console.WriteLine("  open macros                  - Open the macros JSON file");
-                Console.WriteLine("  reload (r)                   - Reload the settings JSON");
+                Console.WriteLine("  reload (r)                   - Reload the settings JSON file");
+                Console.WriteLine("  blacklist-current (bc)       - Blacklist the current process's name");
+                Console.WriteLine("  blacklist (b)                - List all blacklisted processes");
                 Console.WriteLine("  add (a) [key] [value]        - Add a new macro (key can only contain alphabetical characters)");
                 Console.WriteLine("  remove (rm) [key]            - Remove an existing macro");
                 Console.WriteLine("  clean (c)                    - Clean the buffer");
