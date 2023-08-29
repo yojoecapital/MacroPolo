@@ -2,7 +2,7 @@
 
 ## New Features
 
-- List all macros using `macros (m) [text]` command. The results are ordered by their Levenshtein Distance to `[text]`. 
+- List all macros using `macros (m) [text]` command. The results are ordered by their Longest Common Subsequence with `[text]`. 
   - Results are also displayed in a pages that can navigated by the arrow keys.
   - Press Enter to exit the macro display.
   - You can modify the number of macros displayed by setting the `macrosPerPage` parameter in the settings JSON.

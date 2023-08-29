@@ -8,37 +8,35 @@ namespace MacroPolo
 {
     public static class Search
     {
-        private static int ComputeLevenshteinDistance(string s, string t)
+        static int LongestCommonSubsequence(string s1, string s2)
         {
-            int length = s.Length;
-            int length2 = t.Length;
-            int[,] array = new int[length + 1, length2 + 1];
-            for (int i = 0; i <= length; i++)
+            int[,] dp = new int[s1.Length + 1, s2.Length + 1];
+
+            for (int i = 1; i <= s1.Length; i++)
             {
-                array[i, 0] = i;
-            }
-            for (int j = 0; j <= length2; j++)
-            {
-                array[0, j] = j;
-            }
-            for (int j = 1; j <= length2; j++)
-            {
-                for (int i = 1; i <= length; i++)
+                for (int j = 1; j <= s2.Length; j++)
                 {
-                    int min = ((s[i - 1] != t[j - 1]) ? 1 : 0);
-                    array[i, j] = Math.Min(Math.Min(array[i - 1, j] + 1, array[i, j - 1] + 1), array[i - 1, j - 1] + min);
+                    if (s1[i - 1] == s2[j - 1])
+                    {
+                        dp[i, j] = dp[i - 1, j - 1] + 1;
+                    }
+                    else
+                    {
+                        dp[i, j] = Math.Max(dp[i - 1, j], dp[i, j - 1]);
+                    }
                 }
             }
-            return array[length, length2];
+
+            return dp[s1.Length, s2.Length];
         }
 
-        private static IEnumerable<KeyValuePair<string, string>> OrderByLevenshteinDistance(Dictionary<string, string> macros, string search)
+        private static IEnumerable<KeyValuePair<string, string>> OrderByLongestCommonSubsequence(Dictionary<string, string> macros, string search)
         {
-            return macros.OrderBy(pair => ComputeLevenshteinDistance(pair.Value, search));
+            return macros.OrderByDescending(pair => LongestCommonSubsequence(pair.Value, search));
         }
 
         public static void Run(Dictionary<string, string> macros) => Run(macros as IEnumerable<KeyValuePair<string, string>>);
-        public static void Run(Dictionary<string, string> macros, string search) => Run(OrderByLevenshteinDistance(macros, search));
+        public static void Run(Dictionary<string, string> macros, string search) => Run(OrderByLongestCommonSubsequence(macros, search));
 
         public static void Run(IEnumerable<KeyValuePair<string, string>> macros)
         {
