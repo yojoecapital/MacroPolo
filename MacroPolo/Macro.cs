@@ -22,7 +22,12 @@ namespace MacroPolo
                         Console.WriteLine(key + " \u2192 " + macros[key]);
                 }
             }
-            else if (args.Length == 1 && (args[0].Equals("blacklist-current") || args[0].Equals("bc")))
+            else if (args.Length == 1 && args[0].Equals("buffers"))
+            {
+                foreach (var names in polo.GetBufferNames())
+                    Console.WriteLine(names);
+            }
+            else if (args.Length == 1 && args[0].Equals("blacklist-current"))
             {
                 var name = Window.GetActiveProcess()?.ProcessName;
                 var settings = Settings;
@@ -33,7 +38,7 @@ namespace MacroPolo
                     Settings.SaveSettings(SettingsFilePath, settings);
                 }
             }
-            else if (args.Length == 1 && (args[0].Equals("blacklist") || args[0].Equals("b")))
+            else if (args.Length == 1 && args[0].Equals("blacklist"))
             {
                 if (Settings.blacklist.Count == 0) Console.WriteLine("<empty>");
                 foreach (var process in Settings.blacklist)
@@ -98,11 +103,12 @@ namespace MacroPolo
                 Console.WriteLine("  open (o)                     - Open the settings JSON file");
                 Console.WriteLine("  open macros                  - Open the macros JSON file");
                 Console.WriteLine("  reload (r)                   - Reload the settings JSON file");
-                Console.WriteLine("  blacklist-current (bc)       - Blacklist the current process's name");
-                Console.WriteLine("  blacklist (b)                - List all blacklisted processes");
+                Console.WriteLine("  buffers                      - List all the active buffers");
+                Console.WriteLine("  clean                        - Clean the buffer");
+                Console.WriteLine("  blacklist-current            - Blacklist the current process's name");
+                Console.WriteLine("  blacklist                    - List all blacklisted processes");
                 Console.WriteLine("  add (a) [key] [value]        - Add a new macro (key can only contain alphabetical characters)");
                 Console.WriteLine("  remove (rm) [key]            - Remove an existing macro");
-                Console.WriteLine("  clean (c)                    - Clean the buffer");
                 Console.WriteLine("  start (+)                    - Start listening for macros");
                 Console.WriteLine("  stop (-)                     - Stop listening for macros");
                 Console.WriteLine("  clear (cls)                  - Clear the console screen");

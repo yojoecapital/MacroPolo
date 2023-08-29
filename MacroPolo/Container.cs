@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace MacroPolo
@@ -21,6 +22,27 @@ namespace MacroPolo
             blacklist = new List<int>();
             this.containerCapacity = containerCapacity;
             this.bufferCapacity = bufferCapacity;
+        }
+
+        public IEnumerable<string> GetBufferNames()
+        {
+            if (!Macro.Settings.useOneBuffer)
+            {
+                foreach (var id in buffers.Keys)
+                {
+                    Process process;
+                    try 
+                    {
+                        process = Process.GetProcessById(id);
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                    yield return process?.ProcessName;
+                }
+            }
+            yield return "defaultBuffer";
         }
 
         /// <summary>

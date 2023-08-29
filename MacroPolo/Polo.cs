@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -38,6 +39,8 @@ namespace MacroPolo
                 }
             }
         }
+
+        public IEnumerable<string> GetBufferNames() => container.GetBufferNames();
 
         private void ProcessMacro(int vkCode)
         {
