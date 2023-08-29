@@ -7,7 +7,7 @@
 
 The MacroPolo application provides the following commands:
 
-- `macros` or `m`: List all macros
+- `macros [text]` or `m [text]`: List all macros sorted by their similarity to `[text]`
 - `open` `o`: Open the settings JSON file
 - `open macros`: Open the macros JSON file
 - `reload` or `r`: Reload the settings JSON file
@@ -32,7 +32,7 @@ The MacroPolo application provides the following commands:
 ### Releasing
 
 ```
-dotnet msbuild --property:Configuration=Release && cd MacroPolo/bin/Release && 7z a MacroPolo.zip * && gh release create v1.0.1 ./MacroPolo.zip -t "v1.0.1" --target main -F ./RELEASE.md && cd ../../..
+dotnet msbuild --property:Configuration=Release && cd MacroPolo/bin/Release && 7z a MacroPolo.zip * && gh release create v1.0.2 ./MacroPolo.zip -t "v1.0.2" --target main -F ./RELEASE.md && cd ../../..
 ```
 
 ## Contact
