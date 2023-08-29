@@ -1,4 +1,14 @@
-# Release Notes - Version [1.0.0]
+# Release Notes - Version [1.0.1]
+
+## New Features
+
+- Add the names of processes you wish for MacroPolo to ignore to a blacklist.
+  - To do this you must set `useOneBuffer` to `false` in `settings.json`.
+  - Add the name of processes you wish for MacroPolo to ignore in the `blacklist` JSON list.
+  - You can also use the command `blacklist-current (bc)` to blacklist the current running process such as the terminal running MacroPolo.
+
+- Reload the settings JSON using `reload (r)` command.
+
 
 ## Key Features
 

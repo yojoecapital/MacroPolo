@@ -1,4 +1,5 @@
 {
   "macrosPath": "macros.json",
-  "useOneBuffer":  true
+  "useOneBuffer": true,
+  "blacklist": []
 }

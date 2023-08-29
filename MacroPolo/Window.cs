@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 public static class Window
@@ -7,20 +8,16 @@ public static class Window
     private static extern IntPtr GetForegroundWindow();
 
     [DllImport("user32.dll")]
-    private static extern int GetWindowText(IntPtr hWnd, System.Text.StringBuilder text, int count);
+    private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
 
-    public static int? GetActiveWindowId()
+    public static Process GetActiveProcess()
     {
-        var handle = GetForegroundWindow();
-        if (handle == IntPtr.Zero) return null;
-        return (int)handle;
-    }
-
-    public static string GetWindowName(int windowId)
-    {
-        const int maxWindowTitleLength = 256;
-        var windowTitle = new System.Text.StringBuilder(maxWindowTitleLength);
-        GetWindowText((IntPtr)windowId, windowTitle, maxWindowTitleLength);
-        return windowTitle.ToString();
+        var activeWindowHandle = GetForegroundWindow();
+        if (activeWindowHandle != IntPtr.Zero)
+        {
+            GetWindowThreadProcessId(activeWindowHandle, out uint processId);
+            return Process.GetProcessById((int)processId);
+        }
+        return null;
     }
 }

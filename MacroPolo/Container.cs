@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace MacroPolo
 {
@@ -13,11 +12,13 @@ namespace MacroPolo
         private readonly Dictionary<int, Buffer<char>> buffers;
         private readonly int containerCapacity, bufferCapacity;
         private readonly Buffer<char> defaultBuffer;
+        private readonly List<int> blacklist;
 
         public Container(int containerCapacity, int bufferCapacity)
         {
             if (!Macro.Settings.useOneBuffer) buffers = new Dictionary<int, Buffer<char>>(containerCapacity);
             defaultBuffer = new Buffer<char>(bufferCapacity);
+            blacklist = new List<int>();
             this.containerCapacity = containerCapacity;
             this.bufferCapacity = bufferCapacity;
         }
@@ -31,14 +32,21 @@ namespace MacroPolo
             get {
                 if (!Macro.Settings.useOneBuffer)
                 {
-                    var window = Window.GetActiveWindowId();
-                    if (window != null)
+                    var process = Window.GetActiveProcess();
+                    var id = process?.Id;
+                    if (id != null)
                     {
-                        if (buffers.ContainsKey(window.Value)) return buffers[window.Value];
+                        if (buffers.ContainsKey(id.Value)) return buffers[id.Value];
+                        else if (blacklist.Contains(id.Value)) return null;
+                        else if (Macro.Settings.blacklist.Contains(process?.ProcessName))
+                        {
+                            blacklist.Add(id.Value);
+                            return null;
+                        }
                         else if (buffers.Count < containerCapacity)
                         {
                             var buffer = new Buffer<char>(bufferCapacity);
-                            buffers[window.Value] = buffer;
+                            buffers[id.Value] = buffer;
                             return buffer;
                         }
                     }

@@ -22,6 +22,26 @@ namespace MacroPolo
                         Console.WriteLine(key + " \u2192 " + macros[key]);
                 }
             }
+            else if (args.Length == 1 && (args[0].Equals("blacklist-current") || args[0].Equals("bc")))
+            {
+                var name = Window.GetActiveProcess()?.ProcessName;
+                var settings = Settings;
+                if (name != null && !settings.blacklist.Contains(name))
+                {
+                    settings.blacklist.Add(name);
+                    polo.Clear();
+                    Settings.SaveSettings(SettingsFilePath, settings);
+                }
+            }
+            else if (args.Length == 1 && (args[0].Equals("reload") || args[0].Equals("r")))
+            {
+                var awake = Polo.awake;
+                Polo.awake = false;
+                ReloadSettings();
+                polo.CreateContainer();
+                Polo.awake = awake;
+                Console.WriteLine("Reloaded settings");
+            }
             else if (args.Length == 1 && (args[0].Equals("clear") || args[0].Equals("cls")))
             {
                 Console.Clear();
@@ -38,7 +58,7 @@ namespace MacroPolo
                     Console.WriteLine(key + " \u2192 " + value);
                 else Console.WriteLine("Error: could not add key");
             }
-            else if (args.Length == 2 && (args[0].Equals("remove") || args[0].Equals("rm") || args[0].Equals("r")))
+            else if (args.Length == 2 && (args[0].Equals("remove") || args[0].Equals("rm")))
             {
                 var key = args[1];
                 var value = RemoveMacro(key);
@@ -69,8 +89,10 @@ namespace MacroPolo
             {
                 Console.WriteLine("Usage:");
                 Console.WriteLine("  macros (m)                   - List all macros");
+                Console.WriteLine("  blacklist-current (bc)       - blacklist the current process's name");
                 Console.WriteLine("  open (o)                     - Open the settings JSON file");
                 Console.WriteLine("  open macros                  - Open the macros JSON file");
+                Console.WriteLine("  reload (r)                   - Reload the settings JSON");
                 Console.WriteLine("  add (a) [key] [value]        - Add a new macro (key can only contain alphabetical characters)");
                 Console.WriteLine("  remove (rm) [key]            - Remove an existing macro");
                 Console.WriteLine("  clean (c)                    - Clean the buffer");
@@ -91,6 +113,8 @@ namespace MacroPolo
                 return settings;
             }
         }
+        public static void ReloadSettings() => settings = Settings.Create(SettingsFilePath);
+
 
         static readonly string settingsFileName = "settings.json";
         static string SettingsFilePath

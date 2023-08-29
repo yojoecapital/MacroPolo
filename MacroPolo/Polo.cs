@@ -21,10 +21,9 @@ namespace MacroPolo
 
         public static bool awake = true;
 
-        public Polo()
-        {
-            container = new Container(10, 100);
-        }
+        public Polo() => CreateContainer();
+
+        public void CreateContainer() => container = new Container(10, 100);
 
         public int Clear() => container.Clear();
 
