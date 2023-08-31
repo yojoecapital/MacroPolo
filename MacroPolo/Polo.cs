@@ -121,41 +121,42 @@ namespace MacroPolo
                 if (numlock) return (char)(vkCode - 48);
                 else return '\0';
             }
-            switch (vkCode)
-            {
-                case 32: return ' ';
+            else return '\0';
+            //switch (vkCode)
+            //{
+            //    case 32: return ' ';
 
-                case 48: return shift ? ')' : '0';
-                case 49: return shift ? '!' : '1';
-                case 50: return shift ? '@' : '2';
-                case 51: return shift ? '#' : '3';
-                case 52: return shift ? '$' : '4';
-                case 53: return shift ? '%' : '5';
-                case 54: return shift ? '^' : '6';
-                case 55: return shift ? '&' : '7';
-                case 56: return shift ? '*' : '8';
-                case 57: return shift ? '(' : '9';
+            //    case 48: return shift ? ')' : '0';
+            //    case 49: return shift ? '!' : '1';
+            //    case 50: return shift ? '@' : '2';
+            //    case 51: return shift ? '#' : '3';
+            //    case 52: return shift ? '$' : '4';
+            //    case 53: return shift ? '%' : '5';
+            //    case 54: return shift ? '^' : '6';
+            //    case 55: return shift ? '&' : '7';
+            //    case 56: return shift ? '*' : '8';
+            //    case 57: return shift ? '(' : '9';
 
-                case 192: return shift ? '~' : '`';
-                case 189: return shift ? '_' : '-';
-                case 187: return shift ? '+' : '=';
-                case 111: return '/';
-                case 106: return '*';
-                case 109: return '-';
-                case 219: return shift ? '{' : '[';
-                case 221: return shift ? '}' : ']';
-                case 220: return shift ? '|' : '\\';
-                case 107: return '+';
-                case 186: return shift ? ':' : ';';
-                case 222: return shift ? '"' : '\'';
-                case 13: return '\n';
-                case 188: return shift ? '<' : ',';
-                case 190: return shift ? '>' : '.';
-                case 191: return shift ? '?' : '/';
-                case 9: return '\t';
+            //    case 192: return shift ? '~' : '`';
+            //    case 189: return shift ? '_' : '-';
+            //    case 187: return shift ? '+' : '=';
+            //    case 111: return '/';
+            //    case 106: return '*';
+            //    case 109: return '-';
+            //    case 219: return shift ? '{' : '[';
+            //    case 221: return shift ? '}' : ']';
+            //    case 220: return shift ? '|' : '\\';
+            //    case 107: return '+';
+            //    case 186: return shift ? ':' : ';';
+            //    case 222: return shift ? '"' : '\'';
+            //    case 13: return '\n';
+            //    case 188: return shift ? '<' : ',';
+            //    case 190: return shift ? '>' : '.';
+            //    case 191: return shift ? '?' : '/';
+            //    case 9: return '\t';
 
-                default: return '\0'; // Unknown key
-            }
+            //    default: return '\0'; // Unknown key
+            //}
         }
     }
 }
