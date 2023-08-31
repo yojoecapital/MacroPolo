@@ -7,6 +7,7 @@
   - Press Enter to exit the macro display.
   - You can modify the number of macros displayed by setting the `macrosPerPage` parameter in the settings JSON.
 
+- MacroPolo no longer logs special characters. Perhaps this will be added back in a future update when special characters have merit towards the program.
 
 
 ## Key Features
