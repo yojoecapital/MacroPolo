@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -50,7 +51,7 @@ namespace MacroPolo
                 int count = 0;
                 foreach (var searchResult in currentPageResults)
                 {
-                    Console.WriteLine(searchResult);
+                    Macro.PrettyPrint(searchResult);
                     count++;
                 }
                 Console.WriteLine((currentPage * macrosPerPage + count) + " / " + total + " result(s)." +

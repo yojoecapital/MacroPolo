@@ -66,13 +66,7 @@ namespace MacroPolo
                 Console.WriteLine("Cleaned up " + polo.Clear() + " buffer(s)");
             }
             else if (args.Length >= 3 && (args[0].Equals("add") || args[0].Equals("a")))
-            {
-                var key = args[1];
-                var value = string.Join(" ", args.Skip(2));
-                if (AddMacro(key, value))
-                    Console.WriteLine(key + " \u2192 " + value);
-                else Console.WriteLine("Error: could not add key");
-            }
+                ProcessAddMacro(args);
             else if (args.Length == 2 && (args[0].Equals("remove") || args[0].Equals("rm")))
             {
                 var key = args[1];
@@ -103,20 +97,20 @@ namespace MacroPolo
             else if (args.Length > 0)
             {
                 Console.WriteLine("Usage:");
-                Console.WriteLine("  macros (m) [text]            - List all macros sorted by their similarity to [text]");
-                Console.WriteLine("  open (o)                     - Open the settings JSON file");
-                Console.WriteLine("  open macros                  - Open the macros JSON file");
-                Console.WriteLine("  reload (r)                   - Reload the settings JSON file");
-                Console.WriteLine("  buffers                      - List all the active buffers");
-                Console.WriteLine("  clean                        - Clean the buffer");
-                Console.WriteLine("  blacklist-current            - Blacklist the current process's name");
-                Console.WriteLine("  blacklist                    - List all blacklisted processes");
-                Console.WriteLine("  add (a) [key] [value]        - Add a new macro (key can only contain alphabetical characters)");
-                Console.WriteLine("  remove (rm) [key]            - Remove an existing macro");
-                Console.WriteLine("  start (+)                    - Start listening for macros");
-                Console.WriteLine("  stop (-)                     - Stop listening for macros");
-                Console.WriteLine("  clear (cls)                  - Clear the console screen");
-                Console.WriteLine("  quit (q)                     - Exit the program");
+                Console.WriteLine(" \u2022 macros (m) [text]            - List all macros sorted by their similarity to [text]");
+                Console.WriteLine(" \u2022 open (o)                     - Open the settings JSON file");
+                Console.WriteLine(" \u2022 open macros                  - Open the macros JSON file");
+                Console.WriteLine(" \u2022 reload (r)                   - Reload the settings JSON file");
+                Console.WriteLine(" \u2022 buffers                      - List all the active buffers");
+                Console.WriteLine(" \u2022 clean                        - Clean the buffer");
+                Console.WriteLine(" \u2022 blacklist-current            - Blacklist the current process's name");
+                Console.WriteLine(" \u2022 blacklist                    - List all blacklisted processes");
+                Console.WriteLine(" \u2022 add (a) [key] [value]        - Add a new macro (key can only contain alphabetical characters)");
+                Console.WriteLine(" \u2022 remove (rm) [key]            - Remove an existing macro");
+                Console.WriteLine(" \u2022 start (+)                    - Start listening for macros");
+                Console.WriteLine(" \u2022 stop (-)                     - Stop listening for macros");
+                Console.WriteLine(" \u2022 clear (cls)                  - Clear the console screen");
+                Console.WriteLine(" \u2022 quit (q)                     - Exit the program");
                 return;
             }
         }
@@ -155,17 +149,25 @@ namespace MacroPolo
             }
         }
 
-        static Dictionary<string, string> GetDictionary(string filePath)
+        static Dictionary<string, string> GetDictionary(string filePath) => GetDictionary<string>(filePath);
+
+        enum SpecialMacro
+        {
+            IgnoreCase, // ignore the key's case
+            FirstCase, // copy the key's first letter's case in the value's first letter
+            Pluralize // creates two macros for "{key}" and "{key}s" - remember to remove both
+        }
+
+        static Dictionary<string, T> GetDictionary<T>(string filePath)
         {
             string json = File.ReadAllText(filePath);
-            return JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
+            return JsonConvert.DeserializeObject<Dictionary<string, T>>(json);
         }
 
         static void SetDictionary(string filePath, Dictionary<string, string> dictionary)
         {
             string json = JsonConvert.SerializeObject(dictionary);
             File.WriteAllText(filePath, json);
-
         }
 
         private static Dictionary<string, string> macros;
@@ -176,6 +178,39 @@ namespace MacroPolo
                 if (macros == null) macros = GetDictionary(MacrosFilePath);
                 return macros;
             }
+        }
+
+        static void ProcessAddMacro(string[] args) 
+        {
+            var key = args[1];
+            string value;
+            if (args.Length >= 3 && args[2].StartsWith(Settings.openBlock))
+            {
+                value = args[2].Replace(Settings.openBlock, string.Empty);
+                if (args[2].EndsWith(Settings.closeBlock))
+                    value = value.Substring(0, value.Length - Settings.closeBlock.Length);
+                else
+                {
+                    value += "\n";
+                    bool isFirstLine = true;
+                    while (true)
+                    {
+                        Console.Write("...");
+                        string line = Console.ReadLine();
+                        if (!isFirstLine) value += "\n";
+                        value += line;
+                        if (line.Contains(Settings.closeBlock))
+                        {
+                            value = value.Replace(Settings.closeBlock, string.Empty).Trim();
+                            break;
+                        }
+                        isFirstLine = false;
+                    }
+                }
+            }
+            else value = string.Join(" ", args.Skip(2));
+            if (AddMacro(key, value)) PrettyPrint(key + " \u2192 " + value);
+            else Console.WriteLine("Error: could not add key");
         }
 
         static bool AddMacro(string key, string value)
@@ -196,6 +231,19 @@ namespace MacroPolo
                 return value;
             }
             else return null;
+        }
+
+        public static void PrettyPrint(string input)
+        {
+            string trimmedInput = input.Trim();
+            int newlineIndex = trimmedInput.IndexOf('\n');
+            if (newlineIndex != -1)
+            {
+                string subString = trimmedInput.Substring(0, newlineIndex);
+                subString += "...";
+                Console.WriteLine(subString);
+            }
+            else Console.WriteLine(trimmedInput);
         }
     }
 }

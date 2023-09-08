@@ -10,12 +10,20 @@ namespace MacroPolo
         public bool useOneBuffer;
         public int macrosPerPage;
         public List<string> blacklist;
+        public string codeBlock;
+        public string openBlock = "${";
+        public string closeBlock = "}";
 
         public static Settings Create(string path)
         {
             var json = File.ReadAllText(path);
             var settings = JsonConvert.DeserializeObject<Settings>(json);
             if (settings.blacklist == null) settings.blacklist = new List<string>();
+            if (!string.IsNullOrEmpty(settings.codeBlock) && settings.codeBlock.Length >= 2)
+            {
+                settings.openBlock = settings.codeBlock.Substring(0, settings.codeBlock.Length - 1);
+                settings.closeBlock = settings.codeBlock[settings.codeBlock.Length - 1].ToString();
+            }
             return settings;
         }
 

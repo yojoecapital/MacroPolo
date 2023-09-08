@@ -1,6 +1,7 @@
 {
   "macrosPath": "macros.json",
-  "useOneBuffer": true,
+  "useOneBuffer": false,
   "macrosPerPage": 10,
-  "blacklist": []
+  "blacklist": [],
+  "codeBlock": "${}"
 }
