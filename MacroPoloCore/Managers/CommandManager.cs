@@ -227,7 +227,7 @@ namespace MacroPoloCore.Managers
         {
             var key = args[1];
             var specialMacro = fileManager.RemoveSpecialMacro(key);
-            if (specialMacro != null && specialMacro.type == SpecialMacroType.Pluralize)
+            if (specialMacro != null && (specialMacro.type == SpecialMacroType.Pluralize || specialMacro.type == SpecialMacroType.FirstCasePluralize))
             {
                 fileManager.RemoveMacro(specialMacro.value);
                 fileManager.RemoveSpecialMacro(specialMacro.value);
