@@ -231,7 +231,7 @@ namespace MacroPoloCore.Managers
             }
             var value = fileManager.RemoveMacro(key);
             if (value != null) PrettyConsole.PrintKeyValue(key, value, '\u2260');
-            else PrettyConsole.PrintError("Unable to remove key.");
+            else PrettyConsole.PrintError("Could not remove key.");
         }
 
         public void StopListening(string[] _)
