@@ -127,7 +127,7 @@ namespace MacroPoloCore
                "open special",
                "Open the special JSON file."
             );
-            MacroPoloApplication.Build(keyProcessor, repl);
+            MacroPoloApplication.Build(keyProcessor, repl, args);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.IO;
 
 namespace MacroPoloCore.Utilities
 {
@@ -12,7 +11,9 @@ namespace MacroPoloCore.Utilities
         public int macrosPerPage = 1;
         public List<string> blacklist;
         public string codeBlock;
+        [JsonIgnore]
         public string openBlock = "${";
+        [JsonIgnore]
         public string closeBlock = "}";
     }
 }

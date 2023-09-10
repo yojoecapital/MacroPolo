@@ -1,11 +1,9 @@
 ﻿using CliFramework;
 using MacroPoloCore.Utilities;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
 namespace MacroPoloCore.Managers
 {
@@ -38,7 +36,7 @@ namespace MacroPoloCore.Managers
             set 
             {
                 settings = value;
-                SetObject(SettingsFilePath, settings);
+                SetObject(SettingsFilePath, settings, Formatting.Indented);
             }
         }
 

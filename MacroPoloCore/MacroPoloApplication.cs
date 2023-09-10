@@ -1,5 +1,4 @@
 ﻿using CliFramework;
-using MacroPoloCore.Managers;
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -18,7 +17,7 @@ namespace MacroPoloCore
         private static IntPtr _keyboardHookID = IntPtr.Zero;
 
         [STAThread]
-        public static void Build(KeyProcessor keyProcessor, Repl repl)
+        public static void Build(KeyProcessor keyProcessor, Repl repl, string[] args)
         {
             Console.OutputEncoding = Encoding.Unicode;
             Console.InputEncoding = Encoding.Unicode;
@@ -30,7 +29,7 @@ namespace MacroPoloCore
             _keyboardHookID = SetHook(_keyboardProc, WH_KEYBOARD_LL);
 
             // Start the console input loop in a separate thread
-            Thread consoleThread = new(repl.Run);
+            Thread consoleThread = new(() => repl.Run(args));
             consoleThread.Start();
 
             Application.Run();

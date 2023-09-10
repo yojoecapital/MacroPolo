@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using MacroPoloCore.Utilities;
-using Newtonsoft.Json.Linq;
-using System.ComponentModel.DataAnnotations;
-using System.Windows.Forms.VisualStyles;
 
 namespace MacroPoloCore.Managers
 {

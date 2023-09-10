@@ -2,7 +2,7 @@
   "macrosPath": "macros.json",
   "specialPath": "special.json",
   "useOneBuffer": false,
-  "macrosPerPage": 10,
+  "macrosPerPage": 15,
   "blacklist": [],
   "codeBlock": "${[text]}"
 }
