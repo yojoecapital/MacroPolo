@@ -16,8 +16,7 @@ namespace MacroPoloCore
             Repl repl = new()
             {
                 preprocessArg = str => str,
-                onQuit = Application.Exit,
-                pagifyHelp = fileManager.Settings.macrosPerPage
+                onQuit = Application.Exit
             };
             repl.AddCommand(
                 args => args.Length >= 1 && (args[0].Equals("macros") || args[0].Equals("m")),
