@@ -30,11 +30,8 @@ namespace MacroPoloCore.Managers
                 else
                 {
                     settings.blacklist ??= new List<string>();
-                    if (!string.IsNullOrEmpty(settings.codeBlock) && settings.codeBlock.Length >= 2)
-                    {
-                        settings.openBlock = settings.codeBlock[..^1];
-                        settings.closeBlock = settings.codeBlock[^1].ToString();
-                    }
+                    if (!string.IsNullOrEmpty(settings.codeBlock) && settings.codeBlock.Length >= 8 && settings.codeBlock.Contains("[text]"))
+                        (settings.openBlock, settings.closeBlock) = settings.codeBlock.SplitStringFromFirstInstance("[text]");
                     return settings;
                 }
             }
@@ -102,6 +99,7 @@ namespace MacroPoloCore.Managers
         {
             settings = null;
             macros = null;
+            specialMacros = null;
         }
 
         public bool AddMacro(string key, string value) =>

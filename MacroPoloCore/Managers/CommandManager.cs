@@ -123,8 +123,8 @@ namespace MacroPoloCore.Managers
                 string value;
                 if (args.Length >= argIndex + 1 && args[argIndex].StartsWith(settings.openBlock))
                 {
-                    value = args[argIndex].Replace(settings.openBlock, string.Empty);
-                    if (args[argIndex].EndsWith(settings.closeBlock))
+                    value = string.Join(" ", args.Skip(argIndex)).ReplaceFirstInstance(settings.openBlock, string.Empty);
+                    if (value.EndsWith(settings.closeBlock))
                         value = value[..^settings.closeBlock.Length];
                     else
                     {
@@ -138,7 +138,7 @@ namespace MacroPoloCore.Managers
                             value += line;
                             if (line.EndsWith(settings.closeBlock))
                             {
-                                value = value.Replace(settings.closeBlock, string.Empty).Trim();
+                                value = value.ReplaceLastInstance(settings.closeBlock, string.Empty).Trim();
                                 break;
                             }
                             isFirstLine = false;

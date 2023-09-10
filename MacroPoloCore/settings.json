@@ -4,5 +4,5 @@
   "useOneBuffer": false,
   "macrosPerPage": 10,
   "blacklist": [],
-  "codeBlock": "${}"
+  "codeBlock": "${[text]}"
 }

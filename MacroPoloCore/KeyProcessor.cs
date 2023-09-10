@@ -46,9 +46,6 @@ namespace MacroPoloCore
             }
         }
 
-        private string FormatFirstUpper(string input) => char.ToUpper(input[0]) + input[1..];
-        private string FormatFirstLower(string input) => char.ToLower(input[0]) + input[1..];
-
         public IEnumerable<string> GetBufferNames() => container.GetBufferNames();
 
         private void ProcessMacro(int vkCode)
@@ -74,12 +71,12 @@ namespace MacroPoloCore
                             }
                             else if (specialMacro.type == SpecialMacroType.FirstCase)
                             {
-                                if (macros.ContainsKey(specialMacro.value) && FormatFirstLower(str).Equals(FormatFirstLower(specialMacro.value)))
+                                if (macros.ContainsKey(specialMacro.value) && str.FormatFirstLower().Equals(specialMacro.value.FormatFirstLower()))
                                 {
                                     string replace = macros[specialMacro.value];
                                     if (char.IsUpper(str[0]))
-                                        replace = FormatFirstUpper(replace);
-                                    else replace = FormatFirstLower(replace);
+                                        replace = replace.FormatFirstUpper();
+                                    else replace = replace.FormatFirstLower();
                                     SendReplacement(replace);
                                 }
                             }
@@ -93,11 +90,11 @@ namespace MacroPoloCore
                                 if (macros.ContainsKey(specialMacro.value) && specialMacros.ContainsKey(specialMacro.value))
                                 {
                                     var referenceKey = specialMacros[specialMacro.value].value;
-                                    if (FormatFirstLower(str).Equals(FormatFirstLower(specialMacros[specialMacro.value].value))) {
+                                    if (str.FormatFirstLower().Equals(specialMacros[specialMacro.value].value.FormatFirstLower())) {
                                         string replace = macros[referenceKey];
                                         if (char.IsUpper(str[0]))
-                                            replace = FormatFirstUpper(replace);
-                                        else replace = FormatFirstLower(replace);
+                                            replace = replace.FormatFirstUpper();
+                                        else replace = replace.FormatFirstLower();
                                         SendReplacement(replace);
                                     }
                                 }
