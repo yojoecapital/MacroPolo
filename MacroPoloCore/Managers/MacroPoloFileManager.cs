@@ -24,7 +24,7 @@ namespace MacroPoloCore.Managers
                 settings ??= GetObject<Settings>(SettingsFilePath);
                 if (settings == null)
                 {
-                    PrettyConsole.PrintError("Could not parse settings file.");
+                    PrettyConsole.PrintError("Could not parse settings JSON file.");
                     return null;
                 }
                 else
@@ -61,7 +61,7 @@ namespace MacroPoloCore.Managers
             get
             {
                 macros ??= GetDictionary(MacrosFilePath);
-                if (macros == null) PrettyConsole.PrintError("Could not parse macros file.");
+                if (macros == null) PrettyConsole.PrintError("Could not parse macros JSON file.");
                 return macros;
             }
             private set
@@ -88,7 +88,7 @@ namespace MacroPoloCore.Managers
             get
             {
                 specialMacros ??= GetDictionary<SpecialMacro>(SpecialFilePath);
-                if (specialMacros == null) PrettyConsole.PrintError("Could not parse macros file.");
+                if (specialMacros == null) PrettyConsole.PrintError("Could not parse special JSON file.");
                 return specialMacros;
             }
             private set

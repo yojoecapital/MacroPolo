@@ -26,9 +26,9 @@ namespace MacroPoloCore
                 "List all macros sorted by their similarity to [text]."
             );
             repl.AddCommand(
-                args => args.Length >= 1 && (args[0].Equals("specials") || args[0].Equals("s")),
+                args => args.Length >= 1 && (args[0].Equals("special") || args[0].Equals("s")),
                 commandManager.ListSpecialMacros,
-                "specials (s) [text]",
+                "special (s) [text]",
                 "List all special macros sorted by their similarity to [text]."
             );
             repl.AddCommand(

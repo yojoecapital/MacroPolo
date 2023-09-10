@@ -5,7 +5,7 @@ VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CliFramework", "CliFramework\CliFramework.csproj", "{A58D433B-E69F-4E9B-9786-9AE380A6120E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MacroPoloCore", "MacroPoloCore\MacroPoloCore.csproj", "{54ABEE71-A710-446C-8F76-672C8F8BB7F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "macro-polo", "MacroPoloCore\macro-polo.csproj", "{54ABEE71-A710-446C-8F76-672C8F8BB7F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
