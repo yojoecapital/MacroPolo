@@ -25,14 +25,15 @@ The MacroPolo application provides the following commands:
 ## Building
 
 1. Clone the repository: `git clone https://github.com/yojoecapital/MacroPolo.git`
-2. Restore the NuGet Packages using the NuGet CLI: `nuget restore`
-3. Build the application using the .NET CLI: `dotnet msbuild`
-4. Run the executable located in `MacroPolo/bin`
+2. Clone the [CliFramework](https://github.com/yojoecapital/CliFramework) submodule: `cd CliFramework && git git submodule init && git submodule update`
+3. Restore the NuGet Packages using the NuGet CLI: `nuget restore`
+4. Build the application using the .NET CLI: `dotnet msbuild`
+5. Run the executable located in `MacroPolo/bin`
 
 ### Releasing
 
 ```
-dotnet msbuild --property:Configuration=Release && cd MacroPolo/bin/Release && 7z a MacroPolo.zip * && gh release create v1.0.2 ./MacroPolo.zip -t "v1.0.2" --target main -F ./RELEASE.md && cd ../../..
+dotnet build --property:Configuration=Release && cd MacroPoloCore/bin/Release/net6.0-windows && 7z a MacroPolo.zip * && gh release create v1.0.3 ./MacroPolo.zip -t "v1.0.3" --target main -F ./RELEASE.md && cd ../../../..
 ```
 
 ## Contact
