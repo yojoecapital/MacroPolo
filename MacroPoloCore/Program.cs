@@ -70,7 +70,7 @@ namespace MacroPoloCore
             repl.AddCommand(
                 args => args.Length >= 3 && (args[0].Equals("add-ignore") || args[0].Equals("a!")),
                 commandManager.AddIngoreCaseMacro,
-                "add-ignorecase (a!) [key] [value]",
+                "add-ignore (a!) [key] [value]",
                 "Add a new macro\nwith its key's casing ignored."
             );
             repl.AddCommand(
