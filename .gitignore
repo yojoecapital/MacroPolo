@@ -1,5 +1,4 @@
-MacroPolo/bin/
+MacroPoloCore/bin/
 .vs/
-MacroPolo/obj/
+MacroPoloCore/obj/
 packages/
-CliFramework/
