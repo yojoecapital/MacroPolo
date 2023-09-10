@@ -1,6 +1,6 @@
 # MacroPolo
 
-- This is a program for Windows Systems that allows you to create and manage keyboard macros and perform text substitutions through and an easy-to-use command-line interface
+- This is a program for Windows Systems that allows you to create and manage keyboard macros and perform text substitutions through and an easy-to-use command-line interface.
 - To access it easier, place the path of the `MacroPolo` directory in user's `Path` Environment Variable.
 
 ## Usage
