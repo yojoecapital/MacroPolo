@@ -136,7 +136,7 @@ namespace MacroPoloCore.Managers
                             string line = Console.ReadLine();
                             if (!isFirstLine) value += "\n";
                             value += line;
-                            if (line.Contains(settings.closeBlock))
+                            if (line.EndsWith(settings.closeBlock))
                             {
                                 value = value.Replace(settings.closeBlock, string.Empty).Trim();
                                 break;
