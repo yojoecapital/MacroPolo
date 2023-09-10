@@ -42,7 +42,7 @@ The MacroPolo application provides the following commands:
 ### Releasing
 
 ```
-dotnet build --property:Configuration=Release && cd MacroPoloCore/bin/Release/net6.0-windows && del *.zip && 7z a MacroPolo.zip * && gh release create v1.0.3 ./MacroPolo.zip -t "v1.0.3" --target main -F ./RELEASE.md && cd ../../../..
+dotnet build --property:Configuration=Release && cd MacroPoloCore/bin/Release/net6.0-windows && del *.zip && 7z a MacroPolo.zip * && gh release create v1.1.0 ./MacroPolo.zip -t "v1.1.0" --target main -F ./RELEASE.md && cd ../../../..
 ```
 
 ## Contact
