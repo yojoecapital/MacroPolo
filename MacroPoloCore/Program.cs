@@ -13,12 +13,23 @@ namespace MacroPoloCore
             MacroPoloFileManager fileManager = new();
             KeyProcessor keyProcessor = new(fileManager);
             CommandManager commandManager = new(keyProcessor);
-            Repl repl = new();
+            Repl repl = new()
+            {
+                preprocessArg = str => str,
+                onQuit = Application.Exit,
+                pagifyHelp = fileManager.Settings.macrosPerPage
+            };
             repl.AddCommand(
                 args => args.Length >= 1 && (args[0].Equals("macros") || args[0].Equals("m")),
                 commandManager.ListMacros,
                 "macros (m) [text]",
                 "List all macros sorted by their similarity to [text]."
+            );
+            repl.AddCommand(
+                args => args.Length >= 1 && (args[0].Equals("specials") || args[0].Equals("s")),
+                commandManager.ListSpecialMacros,
+                "specials (s) [text]",
+                "List all special macros sorted by their similarity to [text]."
             );
             repl.AddCommand(
                 args => args.Length == 1 && args[0].Equals("buffers"),
@@ -54,7 +65,31 @@ namespace MacroPoloCore
                 args => args.Length >= 3 && (args[0].Equals("add") || args[0].Equals("a")),
                 commandManager.AddMacro,
                 "add (a) [key] [value]",
-                "Add a new macro\n(key can only contain alphabetical characters)"
+                "Add a new macro\n(keys can only contain alphabetical characters)"
+            );
+            repl.AddCommand(
+                args => args.Length >= 3 && (args[0].Equals("add-ignore") || args[0].Equals("a!")),
+                commandManager.AddIngoreCaseMacro,
+                "add-ignorecase (a!) [key] [value]",
+                "Add a new macro\nwith its key's casing ignored."
+            );
+            repl.AddCommand(
+                args => args.Length >= 3 && (args[0].Equals("add-first") || args[0].Equals("a@")),
+                commandManager.AddFirstCaseMacro,
+                "add-first (a@) [key] [value]",
+                "Add a new macro\nthat copies the casing of the key's first character."
+            );
+            repl.AddCommand(
+                args => args.Length >= 3 && (args[0].Equals("add-plural") || args[0].Equals("a$")),
+                commandManager.AddPluralizeMacro,
+                "add-plural (a$) [key] [value]",
+                "Add a new macro\nwith both a singular and plural version."
+            );
+            repl.AddCommand(
+                args => args.Length >= 3 && (args[0].Equals("add-first-plural") || args[0].Equals("a@$") || args[0].Equals("a$@")),
+                commandManager.AddFirstCasePluralizeMacro,
+                "add-first-plural [key] [value]",
+                "Add a new macro\nwith both a singular and plural version\nthat copies the casing of the key's first character."
             );
             repl.AddCommand(
                 args => args.Length == 2 && (args[0].Equals("remove") || args[0].Equals("rm")),
@@ -86,7 +121,12 @@ namespace MacroPoloCore
                "open macros",
                "Open the macros JSON file."
             );
-            repl.onQuit = Application.Exit;
+            repl.AddCommand(
+               args => args.Length == 2 && (args[0].Equals("open") || args[0].Equals("o")) && (args[1].Equals("special") || args[1].Equals("s")),
+               commandManager.OpenSpecialMacros,
+               "open special",
+               "Open the special JSON file."
+            );
             MacroPoloApplication.Build(keyProcessor, repl);
         }
     }

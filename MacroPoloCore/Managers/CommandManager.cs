@@ -3,6 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using MacroPoloCore.Utilities;
+using Newtonsoft.Json.Linq;
+using System.ComponentModel.DataAnnotations;
+using System.Windows.Forms.VisualStyles;
 
 namespace MacroPoloCore.Managers
 {
@@ -47,6 +51,33 @@ namespace MacroPoloCore.Managers
             }
         }
 
+        private KeyValuePair<string, string> SpecialMacroPairToAssociation(KeyValuePair<string, SpecialMacro> pair, Dictionary<string, string> macros)
+        {
+            var key = pair.Value.value;
+            var display = pair.Value.ToString();
+            if (macros.ContainsKey(key))
+                return new KeyValuePair<string, string>(display, macros[key]);
+            else return new KeyValuePair<string, string>(display, "<?>");
+        }
+
+        public void ListSpecialMacros(string[] args)
+        {
+            var specialMacros = fileManager.SpecialMacros;
+            var macros = fileManager.Macros;
+            var header = "Ignore case (!), First case (@), Pluralize ($)";
+            if (specialMacros != null && macros != null)
+            {
+                if (args.Length == 1) 
+                    PrettyConsole.PrintPagedListOneLine(specialMacros.Select(pair => SpecialMacroPairToAssociation(pair, macros)), fileManager.Settings.macrosPerPage, header: header);
+                else
+                {
+                    var sortBy = string.Join(" ", args.Skip(1));
+                    var sorted = FileManager.SortDictionaryByKeyText(specialMacros, sortBy).Select(pair => SpecialMacroPairToAssociation(pair, macros));
+                    PrettyConsole.PrintPagedListOneLine(sorted, fileManager.Settings.macrosPerPage, header: header + ", Sorting by: \"" + sortBy + "\"");
+                }
+            }
+        }
+
         public void ListBuffers(string[] _) => PrettyConsole.PrintList(keyProcessor.GetBufferNames().Select(item => item.Bullet()));
 
         public void BlackistCurrent(string[] _) 
@@ -84,18 +115,17 @@ namespace MacroPoloCore.Managers
         public void Clean(string[] _) =>
             Console.WriteLine("Cleaned up " + keyProcessor.ClearContainer() + " buffer(s).");
 
-        public void AddMacro(string[] args)
+        private string TakeMultilineInput(string[] args, int argIndex = 1)
         {
             var settings = fileManager.Settings;
             if (settings != null)
             {
-                var key = args[1];
                 string value;
-                if (args.Length >= 3 && args[2].StartsWith(settings.openBlock))
+                if (args.Length >= argIndex + 1 && args[argIndex].StartsWith(settings.openBlock))
                 {
-                    value = args[2].Replace(settings.openBlock, string.Empty);
-                    if (args[2].EndsWith(settings.closeBlock))
-                        value = value.Substring(0, value.Length - settings.closeBlock.Length);
+                    value = args[argIndex].Replace(settings.openBlock, string.Empty);
+                    if (args[argIndex].EndsWith(settings.closeBlock))
+                        value = value[..^settings.closeBlock.Length];
                     else
                     {
                         value += "\n";
@@ -115,16 +145,93 @@ namespace MacroPoloCore.Managers
                         }
                     }
                 }
-                else value = string.Join(" ", args.Skip(2));
-                if (fileManager.AddMacro(key, value)) 
+                else value = string.Join(" ", args.Skip(argIndex));
+                return value;
+            }
+            return null;
+        }
+
+        private (string, string) AddMacroInput(string[] args)
+        {
+            var key = args[1];
+            var value = TakeMultilineInput(args, 2);
+            if (value != null) return (key, value);
+            else return default;
+        }
+
+        public void AddMacro(string[] args)
+        {
+            var tuple = AddMacroInput(args);
+            if (tuple != default)
+            {
+                (string key, string value) = tuple;
+                if (fileManager.AddMacro(key, value))
                     PrettyConsole.PrintKeyValue(key, value);
                 else PrettyConsole.PrintError("Could not add key.");
             }
         }
 
+        public void AddIngoreCaseMacro(string[] args)
+        {
+            var tuple = AddMacroInput(args);
+            if (tuple != default)
+            {
+                (string key, string value) = tuple;
+                if (fileManager.AddMacro(key, value) && fileManager.AddSpecialMacro(key, key, SpecialMacroType.IgnoreCase))
+                    PrettyConsole.PrintKeyValue(key, value);
+                else PrettyConsole.PrintError("Could not add key.");
+            }
+        }
+
+        public void AddFirstCaseMacro(string[] args)
+        {
+            var tuple = AddMacroInput(args);
+            if (tuple != default)
+            {
+                (string key, string value) = tuple;
+                if (fileManager.AddMacro(key, value) && fileManager.AddSpecialMacro(key, key, SpecialMacroType.FirstCase))
+                    PrettyConsole.PrintKeyValue(key, value);
+                else PrettyConsole.PrintError("Could not add key.");
+            }
+        }
+
+        private void AddFirstCaseOrPluralizeMacro(string[] args, bool isJustPlural)
+        {
+            var tuple = AddMacroInput(args);
+            if (tuple != default)
+            {
+                var type = isJustPlural ? SpecialMacroType.Pluralize : SpecialMacroType.FirstCasePluralize;
+                (string key1, string value1) = tuple;
+                var key2 = key1 + "s";
+                Console.Write("> " + key2 + " ");
+                var args2 = Console.ReadLine().Split(' ');
+                var value2 = TakeMultilineInput(args2, 0);
+                if (string.IsNullOrEmpty(value2)) value2 = value1 + "s";
+                if (fileManager.AddMacros((key1, value1), (key2, value2))
+                    && fileManager.AddSpecialMacros((key1, key2, type), (key2, key1, type)))
+                {
+                    PrettyConsole.PrintKeyValue(key1, value1);
+                    PrettyConsole.PrintKeyValue(key2, value2);
+                }
+                else PrettyConsole.PrintError("Could not add key.");
+            }
+        }
+
+        public void AddPluralizeMacro(string[] args) =>
+            AddFirstCaseOrPluralizeMacro(args, true);
+
+        public void AddFirstCasePluralizeMacro(string[] args) =>
+            AddFirstCaseOrPluralizeMacro(args, false);
+
         public void RemoveMacro(string[] args)
         {
             var key = args[1];
+            var specialMacro = fileManager.RemoveSpecialMacro(key);
+            if (specialMacro != null && specialMacro.type == SpecialMacroType.Pluralize)
+            {
+                fileManager.RemoveMacro(specialMacro.value);
+                fileManager.RemoveSpecialMacro(specialMacro.value);
+            }
             var value = fileManager.RemoveMacro(key);
             if (value != null) PrettyConsole.PrintKeyValue(key, value, '\u2260');
             else PrettyConsole.PrintError("Unable to remove key.");
@@ -157,6 +264,18 @@ namespace MacroPoloCore.Managers
         public void OpenMacros(string[] _)
         {
             var path = fileManager.MacrosFilePath;
+            ProcessStartInfo psi = new()
+            {
+                FileName = path,
+                UseShellExecute = true
+            };
+            Process.Start(psi);
+            Console.WriteLine(path);
+        }
+
+        public void OpenSpecialMacros(string[] _)
+        {
+            var path = fileManager.SpecialFilePath;
             ProcessStartInfo psi = new()
             {
                 FileName = path,

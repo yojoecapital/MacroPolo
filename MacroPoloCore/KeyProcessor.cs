@@ -46,6 +46,9 @@ namespace MacroPoloCore
             }
         }
 
+        private string FormatFirstUpper(string input) => char.ToUpper(input[0]) + input[1..];
+        private string FormatFirstLower(string input) => char.ToLower(input[0]) + input[1..];
+
         public IEnumerable<string> GetBufferNames() => container.GetBufferNames();
 
         private void ProcessMacro(int vkCode)
@@ -57,20 +60,51 @@ namespace MacroPoloCore
                 {
                     var str = GetLastWord(buffer.ToString());
                     var macros = fileManager.Macros;
-                    if (macros != null && macros.ContainsKey(str))
+                    var specialMacros = fileManager.SpecialMacros;
+                    if (macros != null && specialMacros != null)
                     {
-                        var currentTime = DateTime.Now;
-                        if (currentTime - lastPasteTime >= pasteCooldown)
+                        string strLower = str.ToLower();
+                        if (specialMacros.ContainsKey(strLower))
                         {
-                            lastPasteTime = currentTime;
-                            var original = Clipboard.GetText();
-                            var replace = macros[str];
-                            Clipboard.SetText(replace);
-                            SendKeys.SendWait("^+{LEFT}");
-                            SendKeys.SendWait("^{V}");
-                            if (!string.IsNullOrEmpty(original))
-                                Clipboard.SetText(original);
+                            var specialMacro = specialMacros[strLower];
+                            if (specialMacro.type == SpecialMacroType.IgnoreCase)
+                            {
+                                if (macros.ContainsKey(specialMacro.value))
+                                    SendReplacement(macros[specialMacro.value]);
+                            }
+                            else if (specialMacro.type == SpecialMacroType.FirstCase)
+                            {
+                                if (macros.ContainsKey(specialMacro.value) && FormatFirstLower(str).Equals(FormatFirstLower(specialMacro.value)))
+                                {
+                                    string replace = macros[specialMacro.value];
+                                    if (char.IsUpper(str[0]))
+                                        replace = FormatFirstUpper(replace);
+                                    else replace = FormatFirstLower(replace);
+                                    SendReplacement(replace);
+                                }
+                            }
+                            else if (specialMacro.type == SpecialMacroType.Pluralize) 
+                            {
+                                if (macros.ContainsKey(str))
+                                    SendReplacement(macros[str]);
+                            }
+                            else if (specialMacro.type == SpecialMacroType.FirstCasePluralize)
+                            {
+                                if (macros.ContainsKey(specialMacro.value) && specialMacros.ContainsKey(specialMacro.value))
+                                {
+                                    var referenceKey = specialMacros[specialMacro.value].value;
+                                    if (FormatFirstLower(str).Equals(FormatFirstLower(specialMacros[specialMacro.value].value))) {
+                                        string replace = macros[referenceKey];
+                                        if (char.IsUpper(str[0]))
+                                            replace = FormatFirstUpper(replace);
+                                        else replace = FormatFirstLower(replace);
+                                        SendReplacement(replace);
+                                    }
+                                }
+                            }
                         }
+                        else if (macros.ContainsKey(str))
+                            SendReplacement(macros[str]);
                     }
                     buffer.Clear();
                 }
@@ -81,6 +115,21 @@ namespace MacroPoloCore
                     else if (IsBackspace(vkCode)) buffer.Remove();
                     else AddToBuffer(buffer, vkCode);
                 } 
+            }
+        }
+
+        private static void SendReplacement(string replace)
+        {
+            var currentTime = DateTime.Now;
+            if (currentTime - lastPasteTime >= pasteCooldown)
+            {
+                lastPasteTime = currentTime;
+                var original = Clipboard.GetText();
+                Clipboard.SetText(replace);
+                SendKeys.SendWait("^+{LEFT}");
+                SendKeys.SendWait("^{V}");
+                if (!string.IsNullOrEmpty(original))
+                    Clipboard.SetText(original);
             }
         }
 
