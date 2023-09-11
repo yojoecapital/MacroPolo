@@ -15,9 +15,9 @@ if gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
 fi
 
 if git rev-parse --verify --quiet "$RELEASE_TAG" >/dev/null; then
+    echo "Deleting existing release tag: $RELEASE_TAG"
     git tag -d "$RELEASE_TAG"       # Delete the tag locally
     git push origin --delete "$RELEASE_TAG"  # Delete the tag on the remote repository
-    echo "Tag $RELEASE_TAG deleted successfully."
 fi
 
 # Build the project with Release configuration
@@ -30,7 +30,7 @@ cd "$BUILD_PATH"
 7z a "$RELEASE_PATH" *
 
 # Delete existing .zip file
-rm "$RELEASE_PATH"/*.zip
+rm "*.zip"
 
 # Create a new GitHub release
 gh release create "$RELEASE_TAG" "$RELEASE_PATH" -t "$RELEASE_TITLE" --target "$RELEASE_TARGET" -F "$BUILD_PATH/$RELEASE_NOTES"
