@@ -30,7 +30,7 @@ cd "$BUILD_PATH"
 7z a "$RELEASE_PATH" *
 
 # Delete existing .zip file
-rm "*.zip"
+rm *.zip
 
 # Create a new GitHub release
-gh release create "$RELEASE_TAG" "$RELEASE_PATH" -t "$RELEASE_TITLE" --target "$RELEASE_TARGET" -F "$BUILD_PATH/$RELEASE_NOTES"
+gh release create "$RELEASE_TAG" "$RELEASE_PATH" -t "$RELEASE_TITLE" --target "$RELEASE_TARGET" -F "$RELEASE_NOTES"
