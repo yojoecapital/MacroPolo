@@ -26,11 +26,11 @@ dotnet build --property:Configuration=Release
 # Enter directory
 cd "$BUILD_PATH"
 
-# Create a new .zip archive
-7z a "$RELEASE_PATH" *
-
 # Delete existing .zip file
 rm *.zip
+
+# Create a new .zip archive
+7z a "$RELEASE_PATH" *
 
 # Create a new GitHub release
 gh release create "$RELEASE_TAG" "$RELEASE_PATH" -t "$RELEASE_TITLE" --target "$RELEASE_TARGET" -F "$RELEASE_NOTES"
