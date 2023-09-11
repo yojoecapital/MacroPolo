@@ -34,7 +34,7 @@ The MacroPolo application provides the following commands:
 ## Building
 
 1. Clone the repository: `git clone https://github.com/yojoecapital/MacroPolo.git`
-2. Clone the [CliFramework](https://github.com/yojoecapital/CliFramework) submodule: `git submodule update`
+2. Restore the [CliFramework](https://github.com/yojoecapital/CliFramework) submodule: `git submodule init && git submodule update`
 3. Restore the NuGet Packages using the NuGet CLI: `nuget restore`
 4. Build the application using the .NET CLI: `dotnet msbuild`
 5. Run the executable located in `MacroPolo/bin`
