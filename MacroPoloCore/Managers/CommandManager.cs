@@ -168,6 +168,18 @@ namespace MacroPoloCore.Managers
             }
         }
 
+        public void AddTemporaryMacro(string[] args)
+        {
+            var tuple = AddMacroInput(args);
+            if (tuple != default)
+            {
+                (string key, string value) = tuple;
+                if (fileManager.AddTemporaryMacro(key, value))
+                    PrettyConsole.PrintKeyValue(key, value);
+                else PrettyConsole.PrintError("Could not add key.");
+            }
+        }
+
         public void AddIngoreCaseMacro(string[] args)
         {
             var tuple = AddMacroInput(args);
@@ -223,13 +235,26 @@ namespace MacroPoloCore.Managers
         public void RemoveMacro(string[] args)
         {
             var key = args[1];
-            var specialMacro = fileManager.RemoveSpecialMacro(key);
-            if (specialMacro != null && (specialMacro.type == SpecialMacroType.Pluralize || specialMacro.type == SpecialMacroType.FirstCasePluralize))
+            var value = fileManager.RemoveTemporaryMacro(key);
+            if (value != null) PrettyConsole.PrintKeyValue(key, value, '\u2260');
+            else
             {
-                fileManager.RemoveMacro(specialMacro.value);
-                fileManager.RemoveSpecialMacro(specialMacro.value);
+                var specialMacro = fileManager.RemoveSpecialMacro(key);
+                if (specialMacro != null && (specialMacro.type == SpecialMacroType.Pluralize || specialMacro.type == SpecialMacroType.FirstCasePluralize))
+                {
+                    fileManager.RemoveMacro(specialMacro.value);
+                    fileManager.RemoveSpecialMacro(specialMacro.value);
+                }
+                value = fileManager.RemoveMacro(key);
+                if (value != null) PrettyConsole.PrintKeyValue(key, value, '\u2260');
+                else PrettyConsole.PrintError("Could not remove key.");
             }
-            var value = fileManager.RemoveMacro(key);
+        }
+
+        public void RemoveTemporaryMacro(string[] args)
+        {
+            var key = args[1];
+            var value = fileManager.RemoveTemporaryMacro(key);
             if (value != null) PrettyConsole.PrintKeyValue(key, value, '\u2260');
             else PrettyConsole.PrintError("Could not remove key.");
         }

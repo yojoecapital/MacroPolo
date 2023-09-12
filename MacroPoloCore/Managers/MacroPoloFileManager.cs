@@ -3,6 +3,7 @@ using MacroPoloCore.Utilities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace MacroPoloCore.Managers
@@ -50,19 +51,25 @@ namespace MacroPoloCore.Managers
             }
         }
 
-        private Dictionary<string, string> macros;
+        private readonly Dictionary<string, string> temporaryMacros = new();
         public Dictionary<string, string> Macros
+        {
+            get =>PrivateMacros.Union(temporaryMacros).ToDictionary(pair => pair.Key, pair => pair.Value);
+        }
+
+        private Dictionary<string, string> privateMacros;
+        private Dictionary<string , string> PrivateMacros
         {
             get
             {
-                macros ??= GetDictionary(MacrosFilePath);
-                if (macros == null) PrettyConsole.PrintError("Could not parse macros JSON file.");
-                return macros;
+                privateMacros ??= GetDictionary(MacrosFilePath);
+                if (privateMacros == null) PrettyConsole.PrintError("Could not parse macros JSON file.");
+                return privateMacros;
             }
-            private set
+            set
             {
-                macros = value;
-                SetDictionary(MacrosFilePath, macros);
+                privateMacros = value;
+                SetDictionary(MacrosFilePath, privateMacros);
             }
         }
 
@@ -78,13 +85,14 @@ namespace MacroPoloCore.Managers
         }
 
         private Dictionary<string, SpecialMacro> specialMacros;
+        private readonly Dictionary<string, SpecialMacro> temporarySpecialMacros = new();
         public Dictionary<string, SpecialMacro> SpecialMacros
         {
             get
             {
                 specialMacros ??= GetDictionary<SpecialMacro>(SpecialFilePath);
                 if (specialMacros == null) PrettyConsole.PrintError("Could not parse special JSON file.");
-                return specialMacros;
+                return specialMacros.Union(temporarySpecialMacros).ToDictionary(pair => pair.Key, pair => pair.Value);
             }
             private set
             {
@@ -96,7 +104,7 @@ namespace MacroPoloCore.Managers
         public void Reload()
         {
             settings = null;
-            macros = null;
+            privateMacros = null;
             specialMacros = null;
         }
 
@@ -105,7 +113,7 @@ namespace MacroPoloCore.Managers
 
         public bool AddMacros(params (string, string)[] input)
         {
-            var macros = Macros;
+            var macros = PrivateMacros;
             if (macros != null)
             {
                 foreach (var tuple in input)
@@ -118,7 +126,27 @@ namespace MacroPoloCore.Managers
                         macros[key] = tuple.Item2;
                     }
                 }
-                Macros = macros;
+                PrivateMacros = macros;
+                return true;
+            }
+            else return false;
+        }
+
+        public bool AddTemporaryMacro(string key, string value) =>
+            AddTemporaryMacros((key, value));
+
+        public bool AddTemporaryMacros(params (string, string)[] input)
+        {
+            var macros = temporaryMacros;
+            if (macros != null)
+            {
+                foreach (var tuple in input)
+                {
+                    var key = tuple.Item1;
+                    if (!Regex.IsMatch(key, @"^[a-zA-Z]+$"))
+                        return false;
+                    else macros[key] = tuple.Item2;
+                }
                 return true;
             }
             else return false;
@@ -154,33 +182,24 @@ namespace MacroPoloCore.Managers
 
         public string RemoveMacro(string key)
         {
-            var macros = Macros;
+            var macros = PrivateMacros;
             if (macros != null && macros.ContainsKey(key))
             {
                 var value = macros[key];
                 macros.Remove(key);
-                Macros = macros;
+                PrivateMacros = macros;
                 return value;
             }
             else return null;
         }
 
-        public string RemoveMacros(params string[] keys)
+        public string RemoveTemporaryMacro(string key)
         {
-            var macros = Macros;
-            string value = null;
-            if (macros != null)
+            var macros = temporaryMacros;
+            if (macros != null && macros.ContainsKey(key))
             {
-                foreach (var key in keys)
-                {
-                    if (macros.ContainsKey(key))
-                    {
-                        value = macros[key];
-                        macros.Remove(key);
-                    } 
-                    else return null;
-                }
-                Macros = macros;
+                var value = macros[key];
+                macros.Remove(key);
                 return value;
             }
             else return null;
@@ -193,27 +212,6 @@ namespace MacroPoloCore.Managers
             {
                 var value = specialMacros[key];
                 specialMacros.Remove(key);
-                SpecialMacros = specialMacros;
-                return value;
-            }
-            else return null;
-        }
-
-        public SpecialMacro RemoveSpecialMacros(params string[] keys)
-        {
-            var specialMacros = SpecialMacros;
-            SpecialMacro value = null;
-            if (specialMacros != null)
-            {
-                foreach (var key in keys)
-                {
-                    if (specialMacros.ContainsKey(key))
-                    {
-                        value = specialMacros[key];
-                        specialMacros.Remove(key);
-                    }
-                    else return null;
-                }
                 SpecialMacros = specialMacros;
                 return value;
             }
