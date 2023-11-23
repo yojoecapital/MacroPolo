@@ -2,4 +2,4 @@
 
 ## New Features
 
-- Bug fix for stop listening command (-).
+- Bug fix for start listening command (-).
