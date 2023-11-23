@@ -267,7 +267,7 @@ namespace MacroPoloCore.Managers
 
         public void StartListening(string[] _)
         {
-            keyProcessor.awake = false;
+            keyProcessor.awake = true;
             Console.WriteLine("Listening...");
         }
 

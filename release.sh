@@ -3,7 +3,7 @@
 # Define the paths
 BUILD_PATH="MacroPoloCore/bin/Release/net6.0-windows"
 RELEASE_PATH="MacroPolo.zip"
-RELEASE_TAG="v1.1.1"
+RELEASE_TAG="v1.1.2"
 RELEASE_TITLE="$RELEASE_TAG"
 RELEASE_TARGET="main"
 RELEASE_NOTES="./RELEASE.md"
