@@ -91,12 +91,6 @@ namespace MacroPoloCore
                 "Add a new macro\nwith both a singular and plural version\nthat copies the casing of the key's first character."
             );
             repl.AddCommand(
-                args => args.Length >= 3 && (args[0].Equals("add-first-plural") || args[0].Equals("a@$") || args[0].Equals("a$@")),
-                commandManager.AddFirstCasePluralizeMacro,
-                "add-first-plural [key] [value]",
-                "Add a new macro\nwith both a singular and plural version\nthat copies the casing of the key's first character."
-            );
-            repl.AddCommand(
                 args => args.Length >= 3 && (args[0].Equals("add-temp") || args[0].Equals("at")),
                 commandManager.AddTemporaryMacro,
                 "add-temp [key] [value]",
